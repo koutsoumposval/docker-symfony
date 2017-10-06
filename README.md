@@ -37,3 +37,17 @@ Run any symfony console command
 ```
 make console ARGS=""
 ```
+
+Composer
+---------------
+```
+make composer_install
+make composer_update
+```
+
+Tests
+---------------
+```
+make test
+make phpunit ARGS=""
+```
