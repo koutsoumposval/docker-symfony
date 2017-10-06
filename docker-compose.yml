@@ -1,0 +1,27 @@
+app:
+    build: docker/app/7.1
+    ports:
+        - "80:80"
+    volumes:
+        - ./:/var/www/html
+    links:
+        - database
+
+database:
+    image: mysql
+    ports:
+        - "3306:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=password
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=password
+
+phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    ports:
+        - "8080:80"
+    environment:
+        - MYSQL_USERNAME=root
+        - MYSQL_PASSWORD=password
+    links:
+        - database:mysql
