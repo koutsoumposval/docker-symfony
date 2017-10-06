@@ -1,27 +1,28 @@
-FROM debian:jessie
+FROM php:7.1-apache
 
-ENV DEBIAN_FRONTEND noninteractive
+# Extensions PHP
+RUN apt-get update && apt-get install -y \
+        curl \
+        git \
+        libicu-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-install pdo_mysql intl
 
-# Base Apache + PHP
-RUN apt-get update && apt-get install --yes \
-    wget git \
-    apache2 \
-    php5 php5-sqlite php5-mysql php5-intl php5-curl \
-  && rm -rf /var/lib/apt/lists/* \
-  && a2enmod rewrite
+# Blackfire
+#RUN export VERSION=`php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;"` \
+#    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/${VERSION} \
+#    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+#    && mv /tmp/blackfire-*.so `php -r "echo ini_get('extension_dir');"`/blackfire.so \
+#    && echo "extension=blackfire.so\nblackfire.agent_socket=\${BLACKFIRE_PORT}" > $PHP_INI_DIR/conf.d/blackfire.ini
 
-# Tools (Composer, Blackfire)
-RUN wget -O - https://packagecloud.io/gpg.key | apt-key add - \
-  && echo "deb http://packages.blackfire.io/debian any main" > /etc/apt/sources.list.d/blackfire.list \
-  && apt-get update && apt-get install --yes \
-    blackfire-php \
-  && rm -rf /var/lib/apt/lists/* \
-  && sed -e "s/^blackfire.agent_socket/;blackfire.agent_socket/" -i /etc/php5/mods-available/blackfire.ini \
-  && echo "\nblackfire.agent_socket=\${BLACKFIRE_PORT}" >> /etc/php5/mods-available/blackfire.ini \
-  && wget -O /usr/local/bin/composer https://getcomposer.org/composer.phar && chmod +x /usr/local/bin/composer
+# Composer
+RUN curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && chmod +x /usr/local/bin/composer
+
+# Conf apache
+RUN a2enmod rewrite
+COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 WORKDIR /var/www/html
 
@@ -29,4 +30,4 @@ EXPOSE 80
 
 ENTRYPOINT ["./docker/app/entrypoint.sh"]
 
-CMD ["apache2ctl", "-DFOREGROUND"]
+CMD ["apache2-foreground"]

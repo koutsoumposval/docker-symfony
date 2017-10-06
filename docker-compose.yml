@@ -1,5 +1,5 @@
 app:
-    build: docker/app/7.1
+    build: docker/app
     ports:
         - "80:80"
     volumes:
