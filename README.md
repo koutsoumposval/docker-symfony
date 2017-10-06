@@ -30,3 +30,10 @@ Stop
 ```
 make stop
 ```
+
+Console
+---------------
+Run any symfony console command
+```
+make console ARGS=""
+```
