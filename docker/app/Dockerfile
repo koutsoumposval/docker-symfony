@@ -1,5 +1,7 @@
 FROM php:7.1-apache
 
+MAINTAINER Chrysovalantis Koutsoumpos <info@newweb.gr>
+
 # Extensions PHP
 RUN apt-get update && apt-get install -y \
         curl \
@@ -21,6 +23,10 @@ RUN curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && chm
 # Conf apache
 RUN a2enmod rewrite
 COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
+
+# Xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
