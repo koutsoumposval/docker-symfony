@@ -37,8 +37,6 @@ services:
       env_file: mysql.env
       environment:
           - PMA_HOST=database
-      links:
-          - database
       networks:
           - default
 
