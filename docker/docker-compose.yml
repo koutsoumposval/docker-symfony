@@ -1,0 +1,40 @@
+version: '2'
+
+volumes:
+  mysql_data:
+    driver: local
+
+services:
+  application:
+      container_name: application
+      build: php-apache
+      ports:
+          - "80:80"
+      volumes:
+          - ./../:/var/www/html
+      links:
+          - database
+
+  database:
+      container_name: mariadb
+      image: mariadb
+      ports:
+          - "3306:3306"
+      volumes:
+          - "mysql_data:/var/lib/mysql"
+      env_file: mysql.env
+      restart: "on-failure"
+
+  phpmyadmin:
+      container_name: phpmyadmin
+      image: phpmyadmin/phpmyadmin
+      ports:
+          - "8080:80"
+      env_file: mysql.env
+      environment:
+          - PMA_HOST=mariadb
+      links:
+          - database:mariadb
+
+
+

@@ -1,6 +1,6 @@
 FROM php:7.1-apache
 
-MAINTAINER Chrysovalantis Koutsoumpos <info@newweb.gr>
+MAINTAINER Chrysovalantis Koutsoumpos "info@newweb.gr"
 
 # Extensions PHP
 RUN apt-get update && apt-get install -y \
@@ -28,12 +28,15 @@ COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
+# Install CodeSniffer
+RUN pear install PHP_CodeSniffer-3.0.0RC3
+
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/www/html
 
 EXPOSE 80
 
-ENTRYPOINT ["./docker/app/entrypoint.sh"]
+ENTRYPOINT ["./docker/php-apache/entrypoint.sh"]
 
 CMD ["apache2-foreground"]
