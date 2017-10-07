@@ -12,8 +12,6 @@ services:
           - "80:80"
       volumes:
           - ./../:/var/www/html
-      links:
-          - database
       networks:
           - default
 
