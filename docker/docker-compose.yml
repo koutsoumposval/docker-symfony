@@ -34,7 +34,7 @@ services:
       environment:
           - PMA_HOST=mariadb
       links:
-          - database:mariadb
+          - database:database
 
 
 
