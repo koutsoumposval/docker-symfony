@@ -27,17 +27,6 @@ services:
       networks:
           - default
 
-  phpmyadmin:
-      container_name: phpmyadmin
-      image: phpmyadmin/phpmyadmin
-      ports:
-          - "8080:80"
-      env_file: mysql.env
-      environment:
-          - PMA_HOST=database
-      networks:
-          - default
-
 networks:
   default:
     driver: bridge
