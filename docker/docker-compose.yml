@@ -19,11 +19,22 @@ services:
       container_name: database
       image: mariadb
       ports:
-          - "3306:3306"
+          - "13306:3306"
       volumes:
           - "mysql_data:/var/lib/mysql"
       env_file: mysql.env
       restart: "on-failure"
+      networks:
+          - default
+
+  phpmyadmin:
+      container_name: phpmyadmin
+      image: phpmyadmin/phpmyadmin
+      ports:
+          - "8080:80"
+      env_file: mysql.env
+      environment:
+          - PMA_HOST=database
       networks:
           - default
 
