@@ -16,7 +16,7 @@ services:
           - database
 
   database:
-      container_name: mariadb
+      container_name: database
       image: mariadb
       ports:
           - "3306:3306"
@@ -32,9 +32,9 @@ services:
           - "8080:80"
       env_file: mysql.env
       environment:
-          - PMA_HOST=mariadb
+          - PMA_HOST=database
       links:
-          - database:database
+          - database
 
 
 
