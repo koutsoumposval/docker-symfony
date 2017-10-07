@@ -1,15 +1,9 @@
-DOCKER_COMPOSE = docker-compose
-DOCKER_EXEC = docker exec
-COMPOSER = /usr/local/bin/composer
-
-APP_CONTAINER = dockersymfony_app_1
-PMA_CONTAINER = dockersymfony_phpmyadmin_1
-DB_CONTAINER = dockersymfony_database_1
+DOCKER_COMPOSE = docker-compose -f docker/docker-compose.yml
+COMPOSER = docker run --rm -u $(shell id -u) -v $(shell pwd):/app composer/composer
 
 ARGS?=""
 
-## APPLICATION ##
-.PHONY: create_docker_machine launch stop teardown console composer_install composer_update
+.PHONY: create_docker_machine build teardown test phpunit console composer_install composer_update
 
 create_docker_machine:
 	docker-machine create default --driver virtualbox --virtualbox-memory 4096 --virtualbox-disk-size "60000" \
@@ -18,30 +12,26 @@ create_docker_machine:
 	docker-machine ssh default "echo sysctl -w vm.max_map_count=262144 | sudo tee -a /var/lib/boot2docker/bootlocal.sh"
 	docker-machine ssh default sudo /var/lib/boot2docker/bootlocal.sh
 
-launch:
-	eval "$(docker-machine env default)"
-	${DOCKER_COMPOSE} up -d --build
-
-stop:
-	${DOCKER_COMPOSE} down
+build:
+	${DOCKER_COMPOSE} build
+	${DOCKER_COMPOSE} up -d
+	$(MAKE) composer_install
 
 teardown:
-	${DOCKER_COMPOSE} down --remove-orphans --volumes
+	${DOCKER_COMPOSE} down --volumes --remove-orphans
+
+test:
+	${DOCKER_COMPOSE} exec -T application "vendor/bin/phpunit"
+	${DOCKER_COMPOSE} exec -T application phpcs src --standard=PSR2
+
+phpunit:
+	${DOCKER_COMPOSE} exec application vendor/bin/phpunit ${ARGS}
 
 console:
-	${DOCKER_EXEC} -it ${APP_CONTAINER} bin/console ${ARGS}
+	${DOCKER_COMPOSE} exec -T application bin/console ${ARGS}
 
 composer_install:
 	${COMPOSER} install
 
 composer_update:
 	${COMPOSER} update
-
-## Tests ##
-.PHONY: test phpunit
-
-test: composer_install
-	bin/test.sh
-
-phpunit:
-	vendor/bin/phpunit ${ARGS}
