@@ -25,12 +25,6 @@ Teardown
 make teardown
 ```
 
-Stop
---------------
-```
-make stop
-```
-
 Console
 ---------------
 Run any symfony console command
