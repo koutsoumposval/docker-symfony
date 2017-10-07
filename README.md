@@ -1,5 +1,9 @@
 Docker Symfony Bootstrap template
 ==============
+* symfony 3.3
+* php 7.1 - apache - xdebug, CodeSniffer
+* mariadb
+* phpmyadmin
 
 Create docker machine
 --------------
