@@ -2,12 +2,13 @@ language: php
 php:
   - '7.1'
 
-sudo: required
+sudo: false
+
 services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.13.0
+  DOCKER_COMPOSE_VERSION: 1.7.0
 
 before_install:
   - docker-compose -f docker/docker-compose.yml build
@@ -15,5 +16,5 @@ before_install:
   - composer install --ignore-platform-reqs
 
 script:
-  - docker-compose -f docker/docker-compose.yml exec -T php-apache "vendor/bin/phpunit"
-  - docker-compose -f docker/docker-compose.yml exec -T php-apache phpcs src --standard=PSR2
+  - docker-compose -f docker/docker-compose.yml exec -T application 'vendor/bin/phpunit'
+  - docker-compose -f docker/docker-compose.yml exec -T application phpcs src --standard=PSR2
