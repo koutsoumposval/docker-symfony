@@ -8,11 +8,11 @@ Create a new `default` docker machine
 make create_docker_machine
 ```
 
-Launch
+Build
 --------------
 Build images & launch project
 ```
-make launch
+make build
 ```
 
 Update hosts:
