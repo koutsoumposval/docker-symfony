@@ -2,7 +2,7 @@ Docker Symfony Bootstrap template
 ==============
 * symfony 3.3
 * php 7.1 - apache - xdebug, CodeSniffer
-* mariadb
+* mariadbr
 * phpmyadmin
 
 Create docker machine
@@ -21,7 +21,7 @@ make build
 
 Update hosts:
 * run `docker-machine default ip` to get your docker machine ip
-* add `192.168.99.100 progect-name.dev` in `/etc/hosts`
+* add `192.168.99.100 project-name.dev` in `/etc/hosts`
 
 Teardown
 --------------
