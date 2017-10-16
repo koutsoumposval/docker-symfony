@@ -5,6 +5,8 @@ Docker Symfony Bootstrap template
 * mariadbr
 * phpmyadmin
 
+[![Build Status](https://travis-ci.org/koutsoumposval/docker-symfony.svg?branch=master)](https://travis-ci.org/koutsoumposval/docker-symfony)
+
 Create docker machine
 --------------
 Create a new `default` docker machine
