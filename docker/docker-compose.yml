@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 volumes:
   mysql_data:
@@ -12,8 +12,6 @@ services:
           - "80:80"
       volumes:
           - ./../:/var/www/html
-      networks:
-          - default
 
   database:
       container_name: database
@@ -24,21 +22,4 @@ services:
           - "mysql_data:/var/lib/mysql"
       env_file: mysql.env
       restart: "on-failure"
-      networks:
-          - default
-
-  phpmyadmin:
-      container_name: phpmyadmin
-      image: phpmyadmin/phpmyadmin
-      ports:
-          - "8080:80"
-      env_file: mysql.env
-      environment:
-          - PMA_HOST=database
-      networks:
-          - default
-
-networks:
-  default:
-    driver: bridge
 
